@@ -129,9 +129,20 @@ function updateUI() {
   let sign = income >= outcome ? "$" : "-$";
 
   //UPDATE UI
-  balanceEl.innerHTML = `<small>${sign}</small>${balance}`;
-  outcomeTotalEl.innerHTML = `<small>$</small>${outcome}`;
-  incomeTotalEl.innerHTML = `<small>$</small>${income}`;
+  balanceEl.innerHTML = "";
+  const bSmall = document.createElement("small");
+  bSmall.textContent = sign;
+  balanceEl.append(bSmall, balance);
+
+  outcomeTotalEl.innerHTML = "";
+  const oSmall = document.createElement("small");
+  oSmall.textContent = "$";
+  outcomeTotalEl.append(oSmall, outcome);
+
+  incomeTotalEl.innerHTML = "";
+  const iSmall = document.createElement("small");
+  iSmall.textContent = "$";
+  incomeTotalEl.append(iSmall, income);
 
   clearElement([expenseList, incomeList, allList]);
 
@@ -148,13 +159,22 @@ function updateUI() {
 }
 
 function showEntry(list, type, title, amount, id) {
-  const entry = `<li id="${id}" class="${type}">
-                    <div class="entry">${title} : $${amount}</div>
-                    <div id="edit"></div>
-                    <div id="delete"></div>
-                  </li>`;
-  const position = "afterbegin";
-  list.insertAdjacentHTML(position, entry);
+  const li = document.createElement("li");
+  li.id = id;
+  li.className = type;
+
+  const entryDiv = document.createElement("div");
+  entryDiv.className = "entry";
+  entryDiv.textContent = `${title} : $${amount}`;
+
+  const editDiv = document.createElement("div");
+  editDiv.id = "edit";
+
+  const deleteDiv = document.createElement("div");
+  deleteDiv.id = "delete";
+
+  li.append(entryDiv, editDiv, deleteDiv);
+  list.prepend(li);
 }
 
 function clearElement(elements) {
