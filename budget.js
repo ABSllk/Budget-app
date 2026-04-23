@@ -1,4 +1,4 @@
-import { BudgetModel } from "./model.js";
+import { BudgetModel, toCents, formatCurrency } from "./model.js";
 import { LocalStorageService } from "./storage.js";
 
 // SELECT ELEMENTS
@@ -55,14 +55,24 @@ allBtn.addEventListener("click", function () {
 
 addExpense.addEventListener("click", function () {
   if (!expenseTitle.value || !expenseAmount.value) return;
-  model.addEntry("expense", expenseTitle.value, +expenseAmount.value);
+  const cents = toCents(expenseAmount.value);
+  if (cents < 1) {
+    alert("Please enter a valid amount greater than or equal to 0.01");
+    return;
+  }
+  model.addEntry("expense", expenseTitle.value, cents);
   updateUI();
   clearInput([expenseTitle, expenseAmount]);
 });
 
 addIncome.addEventListener("click", function () {
   if (!incomeTitle.value || !incomeAmount.value) return;
-  model.addEntry("income", incomeTitle.value, +incomeAmount.value);
+  const cents = toCents(incomeAmount.value);
+  if (cents < 1) {
+    alert("Please enter a valid amount greater than or equal to 0.01");
+    return;
+  }
+  model.addEntry("income", incomeTitle.value, cents);
   updateUI();
   clearInput([incomeTitle, incomeAmount]);
 });
@@ -75,7 +85,7 @@ allList.addEventListener("click", deleteOrEdit);
 function deleteOrEdit(event) {
   const targetBtn = event.target;
   const entry = targetBtn.parentNode;
-  
+
   if (targetBtn.id == EDIT) {
     editEntry(entry);
   } else if (targetBtn.id == DELETE) {
@@ -92,10 +102,10 @@ function editEntry(entry) {
   const ENTRY = model.getEntry(Number(entry.id));
   if (ENTRY.type == "income") {
     incomeTitle.value = ENTRY.title;
-    incomeAmount.value = ENTRY.amount;
+    incomeAmount.value = ENTRY.amount / 100;
   } else if (ENTRY.type == "expense") {
     expenseTitle.value = ENTRY.title;
-    expenseAmount.value = ENTRY.amount;
+    expenseAmount.value = ENTRY.amount / 100;
   }
   deleteEntry(entry);
 }
@@ -110,29 +120,30 @@ function updateUI() {
   balanceEl.innerHTML = "";
   const bSmall = document.createElement("small");
   bSmall.textContent = sign;
-  balanceEl.append(bSmall, balance);
+  balanceEl.append(bSmall, formatCurrency(balance));
 
   outcomeTotalEl.innerHTML = "";
   const oSmall = document.createElement("small");
   oSmall.textContent = "$";
-  outcomeTotalEl.append(oSmall, outcome);
+  outcomeTotalEl.append(oSmall, formatCurrency(outcome));
 
   incomeTotalEl.innerHTML = "";
   const iSmall = document.createElement("small");
   iSmall.textContent = "$";
-  incomeTotalEl.append(iSmall, income);
+  incomeTotalEl.append(iSmall, formatCurrency(income));
 
   clearElement([expenseList, incomeList, allList]);
 
   model.entries.forEach((entry, index) => {
+    const formattedAmount = formatCurrency(entry.amount);
     if (entry.type == "expense") {
-      showEntry(expenseList, entry.type, entry.title, entry.amount, index);
+      showEntry(expenseList, entry.type, entry.title, formattedAmount, index);
     } else if (entry.type == "income") {
-      showEntry(incomeList, entry.type, entry.title, entry.amount, index);
+      showEntry(incomeList, entry.type, entry.title, formattedAmount, index);
     }
-    showEntry(allList, entry.type, entry.title, entry.amount, index);
+    showEntry(allList, entry.type, entry.title, formattedAmount, index);
   });
-  
+
   updateChart(income, outcome);
   storage.save(model.entries);
 }
