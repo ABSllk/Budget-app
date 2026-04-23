@@ -32,10 +32,32 @@ function drawCircle(color, ratio, anticlockwise) {
 }
 
 function updateChart(income, outcome) {
+  try {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!Number.isFinite(income) || !Number.isFinite(outcome) || income < 0 || outcome < 0) {
+      console.error("[BudgetApp:Chart] Invalid input — income:", income, "outcome:", outcome);
+      drawFallbackChart();
+      return;
+    }
+
+    const total = income + outcome;
+
+    if (total === 0) {
+      drawFallbackChart();
+      return;
+    }
+
+    const ratio = income / total;
+    drawCircle("#FFF", -ratio, true);
+    drawCircle("#F0624D", 1 - ratio, false);
+  } catch (err) {
+    console.error("[BudgetApp:Chart] Rendering failed:", err);
+    drawFallbackChart();
+  }
+}
+
+function drawFallbackChart() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  let ratio = income / (outcome + income);
-
-  drawCircle("#FFF", -ratio, true);
-  drawCircle("#F0624D", 1 - ratio, false);
+  drawCircle("#555", 1, false);
 }

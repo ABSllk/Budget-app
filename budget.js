@@ -1,4 +1,7 @@
-//SELECT ELEMENTS
+import { BudgetModel } from "./model.js";
+import { LocalStorageService } from "./storage.js";
+
+// SELECT ELEMENTS
 const balanceEl = document.querySelector(".balance .value");
 const incomeTotalEl = document.querySelector(".income-total");
 const outcomeTotalEl = document.querySelector(".outcome-total");
@@ -9,12 +12,12 @@ const incomeList = document.querySelector("#income .list");
 const expenseList = document.querySelector("#expense .list");
 const allList = document.querySelector("#all .list");
 
-//SELECT BUTTONS
+// SELECT BUTTONS
 const expenseBtn = document.querySelector(".first-tab");
 const incomeBtn = document.querySelector(".second-tab");
 const allBtn = document.querySelector(".third-tab");
 
-//INPUT BTS
+// INPUT BTS
 const addExpense = document.querySelector(".add-expense");
 const expenseTitle = document.getElementById("expense-title-input");
 const expenseAmount = document.getElementById("expense-amount-input");
@@ -23,56 +26,14 @@ const addIncome = document.querySelector(".add-income");
 const incomeTitle = document.getElementById("income-title-input");
 const incomeAmount = document.getElementById("income-amount-input");
 
-//VARIABLES
-let ENTRY_LIST;
-let balance = 0,
-  income = 0,
-  outcome = 0;
-const DELETE = "delete",
-  EDIT = "edit";
+const DELETE = "delete", EDIT = "edit";
 
-// LOOK IF THERE IS DATA IN LOCAL STORAGE
-const VALID_TYPES = new Set(["income", "expense"]);
+const storage = new LocalStorageService("entry_list");
+const model = new BudgetModel(storage.load());
 
-function validateEntry(entry) {
-  if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
-    return null;
-  }
-  const type = entry.type;
-  const title = typeof entry.title === "string" ? entry.title.trim() : "";
-  const amount = Number(entry.amount);
-
-  if (!VALID_TYPES.has(type) || title.length === 0 || !Number.isFinite(amount) || amount < 0) {
-    return null;
-  }
-  return { type, title, amount };
-}
-
-function loadEntries() {
-  try {
-    const raw = localStorage.getItem("entry_list");
-    if (!raw) return [];
-    
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    
-    const validated = parsed.map(validateEntry).filter(Boolean);
-    
-    if (validated.length < parsed.length) {
-      console.warn(`[BudgetApp] Dropped ${parsed.length - validated.length} malformed entries from storage.`);
-    }
-    
-    return validated;
-  } catch (e) {
-    console.error("[BudgetApp] Corrupted localStorage data — resetting.", e);
-    return [];
-  }
-}
-
-ENTRY_LIST = loadEntries();
 updateUI();
 
-//EVENT LISTENERS
+// EVENT LISTENERS
 expenseBtn.addEventListener("click", function () {
   show(expenseEl);
   hide([incomeEl, allEl]);
@@ -93,33 +54,15 @@ allBtn.addEventListener("click", function () {
 });
 
 addExpense.addEventListener("click", function () {
-  // CHECK IF ONE OF THE INPUT IS EMPTY => EXIT
   if (!expenseTitle.value || !expenseAmount.value) return;
-
-  // ADD INPUTs TO ENTRY_LIST
-  let expense = {
-    type: "expense",
-    title: expenseTitle.value,
-    amount: +expenseAmount.value,
-  };
-  ENTRY_LIST.push(expense);
-
+  model.addEntry("expense", expenseTitle.value, +expenseAmount.value);
   updateUI();
   clearInput([expenseTitle, expenseAmount]);
 });
 
 addIncome.addEventListener("click", function () {
-  // CHECK IF ONE OF THE INPUT IS EMPTY => EXIT
   if (!incomeTitle.value || !incomeAmount.value) return;
-
-  // ADD INPUTs TO ENTRY_LIST
-  let income = {
-    type: "income",
-    title: incomeTitle.value,
-    amount: +incomeAmount.value,
-  };
-  ENTRY_LIST.push(income);
-
+  model.addEntry("income", incomeTitle.value, +incomeAmount.value);
   updateUI();
   clearInput([incomeTitle, incomeAmount]);
 });
@@ -128,11 +71,11 @@ incomeList.addEventListener("click", deleteOrEdit);
 expenseList.addEventListener("click", deleteOrEdit);
 allList.addEventListener("click", deleteOrEdit);
 
-// HELEPER FUNCS
+// HELPER FUNCS
 function deleteOrEdit(event) {
   const targetBtn = event.target;
   const entry = targetBtn.parentNode;
-
+  
   if (targetBtn.id == EDIT) {
     editEntry(entry);
   } else if (targetBtn.id == DELETE) {
@@ -141,13 +84,12 @@ function deleteOrEdit(event) {
 }
 
 function deleteEntry(entry) {
-  ENTRY_LIST.splice(entry.id, 1);
+  model.removeEntry(Number(entry.id));
   updateUI();
 }
 
 function editEntry(entry) {
-  const ENTRY = ENTRY_LIST[entry.id];
-
+  const ENTRY = model.getEntry(Number(entry.id));
   if (ENTRY.type == "income") {
     incomeTitle.value = ENTRY.title;
     incomeAmount.value = ENTRY.amount;
@@ -159,13 +101,12 @@ function editEntry(entry) {
 }
 
 function updateUI() {
-  income = calculateTotal("income", ENTRY_LIST);
-  outcome = calculateTotal("expense", ENTRY_LIST);
-  balance = Math.abs(calculateBalance(income, outcome));
+  const income = model.totalIncome;
+  const outcome = model.totalExpense;
+  const balance = Math.abs(model.balance);
+  let sign = model.totalIncome >= model.totalExpense ? "$" : "-$";
 
-  let sign = income >= outcome ? "$" : "-$";
-
-  //UPDATE UI
+  // UPDATE UI
   balanceEl.innerHTML = "";
   const bSmall = document.createElement("small");
   bSmall.textContent = sign;
@@ -183,7 +124,7 @@ function updateUI() {
 
   clearElement([expenseList, incomeList, allList]);
 
-  ENTRY_LIST.forEach((entry, index) => {
+  model.entries.forEach((entry, index) => {
     if (entry.type == "expense") {
       showEntry(expenseList, entry.type, entry.title, entry.amount, index);
     } else if (entry.type == "income") {
@@ -191,8 +132,9 @@ function updateUI() {
     }
     showEntry(allList, entry.type, entry.title, entry.amount, index);
   });
+  
   updateChart(income, outcome);
-  localStorage.setItem("entry_list", JSON.stringify(ENTRY_LIST));
+  storage.save(model.entries);
 }
 
 function showEntry(list, type, title, amount, id) {
@@ -220,19 +162,6 @@ function clearElement(elements) {
   });
 }
 
-function calculateTotal(type, list) {
-  let sum = 0;
-  list.forEach((entry) => {
-    if (entry.type == type) {
-      sum += entry.amount;
-    }
-  });
-  return sum;
-}
-
-function calculateBalance(income, outcome) {
-  return income - outcome;
-}
 function clearInput(inputs) {
   inputs.forEach((input) => {
     input.value = "";
@@ -252,6 +181,7 @@ function hide(elements) {
 function active(element) {
   element.classList.add("focus");
 }
+
 function inactive(elements) {
   elements.forEach((element) => {
     element.classList.remove("focus");
