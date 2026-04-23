@@ -6,7 +6,8 @@ function validateEntry(entry) {
   }
   const type = entry.type;
   const title = typeof entry.title === "string" ? entry.title.trim() : "";
-  const amount = Number(entry.amount);
+  // Ensure the loaded amount is coerced to integer (cents) in case it was stored as floats before.
+  const amount = Math.round(Number(entry.amount));
 
   if (!VALID_TYPES.has(type) || title.length === 0 || !Number.isFinite(amount) || amount < 0) {
     return null;

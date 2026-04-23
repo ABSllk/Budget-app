@@ -1,3 +1,11 @@
+export function toCents(amountString) {
+  return Math.round(parseFloat(amountString) * 100) || 0;
+}
+
+export function formatCurrency(cents) {
+  return (cents / 100).toFixed(2);
+}
+
 export class BudgetModel {
   #entries = [];
 
