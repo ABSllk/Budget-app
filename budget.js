@@ -32,7 +32,44 @@ const DELETE = "delete",
   EDIT = "edit";
 
 // LOOK IF THERE IS DATA IN LOCAL STORAGE
-ENTRY_LIST = JSON.parse(localStorage.getItem("entry_list")) || [];
+const VALID_TYPES = new Set(["income", "expense"]);
+
+function validateEntry(entry) {
+  if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
+    return null;
+  }
+  const type = entry.type;
+  const title = typeof entry.title === "string" ? entry.title.trim() : "";
+  const amount = Number(entry.amount);
+
+  if (!VALID_TYPES.has(type) || title.length === 0 || !Number.isFinite(amount) || amount < 0) {
+    return null;
+  }
+  return { type, title, amount };
+}
+
+function loadEntries() {
+  try {
+    const raw = localStorage.getItem("entry_list");
+    if (!raw) return [];
+    
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    
+    const validated = parsed.map(validateEntry).filter(Boolean);
+    
+    if (validated.length < parsed.length) {
+      console.warn(`[BudgetApp] Dropped ${parsed.length - validated.length} malformed entries from storage.`);
+    }
+    
+    return validated;
+  } catch (e) {
+    console.error("[BudgetApp] Corrupted localStorage data — resetting.", e);
+    return [];
+  }
+}
+
+ENTRY_LIST = loadEntries();
 updateUI();
 
 //EVENT LISTENERS
