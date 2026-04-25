@@ -4,6 +4,7 @@
   font-weight: bold;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Gilroy Bold";
   src: url("font/Gilroy-Bold.woff") format("woff");
@@ -14,6 +15,7 @@
 body {
   background-color: #222;
   font-family: "Gilroy";
+  margin: 0;
 }
 
 * {
@@ -24,6 +26,7 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  box-sizing: border-box;
 }
 
 /* REMOVE SPINNERS FROM NUMBER INPUT */
@@ -42,7 +45,7 @@ input[type="number"] {
 .budget-container {
   position: absolute;
   width: 360px;
-  height: 100vh;
+  min-height: 100vh;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -57,11 +60,41 @@ input[type="number"] {
 .budget-container .app-title a {
   color: #fff;
 }
+
 .budget-container .app-title a b {
   font-family: "Gilroy Bold";
 }
 
-.budget-header {
+/* TOP ACTIONS: LANGUAGE + PRIVACY */
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 20px 0;
+  flex-wrap: wrap;
+}
+
+.language-btn {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
+  padding: 6px 10px;
+  background-color: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.8em;
+  font-family: "Gilroy Bold";
+}
+
+.language-btn:hover,
+.active-language {
+  background-color: #ffffff;
+  color: #2a0355;
+}
+
+.privacy-link {
+  color: #ffffff;
+  font-size: 0.82em;
+  text-decoration: underline;
 }
 
 .budget-header .balance {
@@ -103,6 +136,7 @@ input[type="number"] {
   color: #fff;
   opacity: 0.5;
 }
+
 .budget-header .account .income .income-total {
   color: #fff;
   font-family: "Gilroy Bold";
@@ -112,12 +146,13 @@ input[type="number"] {
   color: #fff;
   opacity: 0.5;
 }
+
 .budget-header .account .outcome .outcome-total {
   color: #f0624d;
   font-family: "Gilroy Bold";
 }
 
-/**************   DASHBOARD    ***********/
+/************** DASHBOARD ***********/
 .budget-dashboard {
   display: block;
   width: 360px;
@@ -125,6 +160,7 @@ input[type="number"] {
   background-color: #fff;
   margin-top: 35px;
   border-radius: 30px 30px 0 0;
+  padding-bottom: 10px;
 }
 
 .budget-dashboard .dash-title {
@@ -167,19 +203,28 @@ input[type="number"] {
 }
 
 .budget-dashboard input {
-  /* MAKE INPUT SELECTABLE */
   -webkit-user-select: auto;
   -moz-user-select: auto;
   -ms-user-select: auto;
   user-select: auto;
 }
 
-/* ////////// ALL ///////////// */
+/* ERROR MESSAGE */
+.form-error {
+  min-height: 18px;
+  margin: 8px 20px 0;
+  color: #f0624d;
+  font-size: 0.82em;
+  font-family: "Gilroy Bold";
+}
+
+/* ALL */
 .budget-dashboard #all {
   width: 360px;
   height: auto;
   position: relative;
 }
+
 .budget-dashboard #all ul {
   width: 360px;
   height: 270px;
@@ -225,13 +270,11 @@ input[type="number"] {
   background-repeat: no-repeat;
 }
 
-.budget-dashboard #all ul.list li.income {
-}
 .budget-dashboard #all ul.list li.expense {
   color: #f0624d;
 }
 
-/* //////// EXPENSE ////////// */
+/* EXPENSE */
 .budget-dashboard #expense {
   width: 360px;
   min-height: 339px;
@@ -283,7 +326,7 @@ input[type="number"] {
 
 .budget-dashboard #expense ul {
   width: 360px;
-  min-height: 285px;
+  min-height: 250px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -334,7 +377,7 @@ input[type="number"] {
   background-repeat: no-repeat;
 }
 
-/* /////// INCOME //////// */
+/* INCOME */
 .budget-dashboard #income {
   width: 360px;
   min-height: 339px;
@@ -386,7 +429,7 @@ input[type="number"] {
 
 .budget-dashboard #income ul {
   width: 360px;
-  height: auto;
+  min-height: 250px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -434,4 +477,129 @@ input[type="number"] {
   background-image: url("icon/trash.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
+}
+
+/* COOKIE BANNER */
+.cookie-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  width: 330px;
+  background-color: #ffffff;
+  color: #1a0034;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+.cookie-banner strong {
+  font-family: "Gilroy Bold";
+}
+
+.cookie-banner p {
+  margin: 8px 0 12px;
+  font-size: 0.88em;
+  line-height: 1.4;
+}
+
+.cookie-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cookie-actions a {
+  color: #2a0355;
+  text-decoration: underline;
+  font-size: 0.84em;
+  font-family: "Gilroy Bold";
+}
+
+.cookie-actions button {
+  border: none;
+  border-radius: 12px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-family: "Gilroy Bold";
+}
+
+#accept-cookies {
+  background-color: #2a0355;
+  color: #ffffff;
+}
+
+#decline-cookies {
+  background-color: #eeeeee;
+  color: #1a0034;
+}
+
+.hide-cookie-banner {
+  display: none;
+}
+
+/* PRIVACY POLICY PAGE */
+.privacy-page {
+  min-height: 100vh;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 16px;
+}
+
+.privacy-card {
+  width: 100%;
+  max-width: 720px;
+  background-color: #ffffff;
+  color: #1a0034;
+  border-radius: 24px;
+  padding: 28px;
+  line-height: 1.6;
+}
+
+.privacy-card h1,
+.privacy-card h2 {
+  font-family: "Gilroy Bold";
+}
+
+.privacy-card h1 {
+  margin-top: 0;
+}
+
+.privacy-card h2 {
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.privacy-card p {
+  margin-top: 0;
+}
+
+.privacy-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.privacy-actions .language-btn {
+  border-color: #2a0355;
+  color: #2a0355;
+}
+
+.privacy-actions .language-btn:hover,
+.privacy-actions .active-language {
+  background-color: #2a0355;
+  color: #ffffff;
+}
+
+.privacy-actions a {
+  color: #2a0355;
+  text-decoration: underline;
+  font-family: "Gilroy Bold";
 }
