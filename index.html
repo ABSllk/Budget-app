@@ -4,80 +4,135 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Budget Web App | javascript</title>
+    <title>Budget Web App | JavaScript</title>
     <link href="./style.css" rel="stylesheet" type="text/css" />
   </head>
+
   <body>
     <div class="budget-container">
       <div class="app-title">
-        <a href="">Budget<b>App</b></a>
+        <a href="index.html">Budget<b>App</b></a>
       </div>
+
+      <div class="top-actions">
+        <button id="lang-en" class="language-btn" type="button">English</button>
+        <button id="lang-zh" class="language-btn" type="button">中文</button>
+        <a href="privacy.html" class="privacy-link" data-i18n="privacyPolicy">
+          Privacy Policy
+        </a>
+      </div>
+
       <div class="budget-header">
         <div class="balance">
-          <div class="title">Balance</div>
+          <div class="title" data-i18n="balance">Balance</div>
           <div class="value"><small>$</small>0</div>
         </div>
+
         <div class="account">
           <div class="income">
-            <div class="title">Income</div>
+            <div class="title" data-i18n="income">Income</div>
             <div class="income-total"><small>$</small>0</div>
           </div>
+
           <div class="chart"></div>
+
           <div class="outcome">
-            <div class="title">Outcome</div>
+            <div class="title" data-i18n="outcome">Outcome</div>
             <div class="outcome-total"><small>$</small>0</div>
           </div>
         </div>
       </div>
+
       <div class="budget-dashboard">
-        <div class="dash-title">Dashboard</div>
+        <div class="dash-title" data-i18n="dashboard">Dashboard</div>
+
         <div class="toggle">
-          <div class="first-tab">Expenses</div>
-          <div class="second-tab">Income</div>
-          <div class="third-tab focus">All</div>
+          <div class="first-tab" data-i18n="expenses">Expenses</div>
+          <div class="second-tab" data-i18n="income">Income</div>
+          <div class="third-tab focus" data-i18n="all">All</div>
         </div>
+
         <div class="hide" id="expense">
           <ul class="list"></ul>
+
+          <div class="form-error" id="expense-error" aria-live="polite"></div>
+
           <div class="input">
             <input
               type="text"
               id="expense-title-input"
               name="title"
               placeholder="title"
+              data-i18n-placeholder="titlePlaceholder"
             />
+
             <input
               type="number"
               id="expense-amount-input"
               name="amount"
               placeholder="$0"
             />
-            <div class="add-expense"><img src="icon/plus.png" alt="+" /></div>
+
+            <div class="add-expense">
+              <img src="icon/plus.png" alt="Add expense" data-i18n-alt="addExpenseAlt" />
+            </div>
           </div>
         </div>
+
         <div class="hide" id="income">
           <ul class="list"></ul>
+
+          <div class="form-error" id="income-error" aria-live="polite"></div>
+
           <div class="input">
             <input
               type="text"
               id="income-title-input"
               name="title"
               placeholder="title"
+              data-i18n-placeholder="titlePlaceholder"
             />
+
             <input
               type="number"
               id="income-amount-input"
               name="amount"
               placeholder="$0"
             />
-            <div class="add-income"><img src="icon/plus.png" alt="+" /></div>
+
+            <div class="add-income">
+              <img src="icon/plus.png" alt="Add income" data-i18n-alt="addIncomeAlt" />
+            </div>
           </div>
         </div>
+
         <div id="all">
           <ul class="list"></ul>
         </div>
       </div>
     </div>
+
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">
+      <div class="cookie-content">
+        <strong data-i18n="cookieTitle">Cookie Notice</strong>
+        <p data-i18n="cookieText">
+          We use essential cookies and local storage to remember your preferences and improve the app experience.
+        </p>
+      </div>
+
+      <div class="cookie-actions">
+        <a href="privacy.html" data-i18n="learnMore">Learn more</a>
+        <button id="decline-cookies" type="button" data-i18n="declineCookies">
+          Decline
+        </button>
+        <button id="accept-cookies" type="button" data-i18n="acceptCookies">
+          Accept
+        </button>
+      </div>
+    </div>
+
     <script src="./chart.js"></script>
+    <script src="./i18n.js"></script>
     <script type="module" src="./budget.js"></script>
   </body>
 </html>
