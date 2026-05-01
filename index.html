@@ -5,40 +5,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Budget Web App | JavaScript</title>
+    <meta name="description" content="A simple budget tracking web app to manage your income and expenses." />
     <link href="./style.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
     <div class="budget-container">
-      <div class="app-title">
-        <a href="index.html">Budget<b>App</b></a>
-      </div>
-
-      <div class="top-actions">
-        <button id="lang-en" class="language-btn" type="button">English</button>
-        <button id="lang-zh" class="language-btn" type="button">中文</button>
-        <a href="privacy.html" class="privacy-link" data-i18n="privacyPolicy">
-          Privacy Policy
-        </a>
-      </div>
-
-      <div class="budget-header">
-        <div class="balance">
-          <div class="title" data-i18n="balance">Balance</div>
-          <div class="value"><small>$</small>0</div>
+      <div class="budget-sidebar">
+        <div class="app-title">
+          <a href="index.html">Budget<b>App</b></a>
         </div>
 
-        <div class="account">
-          <div class="income">
-            <div class="title" data-i18n="income">Income</div>
-            <div class="income-total"><small>$</small>0</div>
+        <div class="top-actions">
+          <button id="lang-en" class="language-btn" type="button">English</button>
+          <button id="lang-zh" class="language-btn" type="button">中文</button>
+          <button
+            id="responsive-toggle"
+            class="responsive-toggle-btn"
+            type="button"
+            aria-pressed="false"
+            data-i18n-aria-label="landscapeToggleAlt"
+            aria-label="Toggle landscape mode"
+          >
+            <span class="responsive-toggle-track" aria-hidden="true">
+              <span class="responsive-toggle-thumb"></span>
+            </span>
+            <span class="responsive-toggle-label" data-i18n="landscapeMode">Landscape</span>
+          </button>
+          <a href="privacy.html" class="privacy-link" data-i18n="privacyPolicy">
+            Privacy Policy
+          </a>
+        </div>
+
+        <div class="budget-header">
+          <div class="balance">
+            <div class="title" data-i18n="balance">Balance</div>
+            <div class="value"><small>$</small>0</div>
           </div>
 
-          <div class="chart"></div>
+          <div class="account">
+            <div class="income">
+              <div class="title" data-i18n="income">Income</div>
+              <div class="income-total"><small>$</small>0</div>
+            </div>
 
-          <div class="outcome">
-            <div class="title" data-i18n="outcome">Outcome</div>
-            <div class="outcome-total"><small>$</small>0</div>
+            <div class="chart"></div>
+
+            <div class="outcome">
+              <div class="title" data-i18n="outcome">Outcome</div>
+              <div class="outcome-total"><small>$</small>0</div>
+            </div>
           </div>
         </div>
       </div>
@@ -46,10 +62,10 @@
       <div class="budget-dashboard">
         <div class="dash-title" data-i18n="dashboard">Dashboard</div>
 
-        <div class="toggle">
-          <div class="first-tab" data-i18n="expenses">Expenses</div>
-          <div class="second-tab" data-i18n="income">Income</div>
-          <div class="third-tab focus" data-i18n="all">All</div>
+        <div class="toggle" role="tablist">
+          <button type="button" class="first-tab" role="tab" aria-selected="false" data-i18n="expenses">Expenses</button>
+          <button type="button" class="second-tab" role="tab" aria-selected="false" data-i18n="income">Income</button>
+          <button type="button" class="third-tab focus" role="tab" aria-selected="true" data-i18n="all">All</button>
         </div>
 
         <div class="hide" id="expense">
@@ -58,6 +74,7 @@
           <div class="form-error" id="expense-error" aria-live="polite"></div>
 
           <div class="input">
+            <label for="expense-title-input" class="sr-only" data-i18n="expenseTitleLabel">Expense title</label>
             <input
               type="text"
               id="expense-title-input"
@@ -66,6 +83,7 @@
               data-i18n-placeholder="titlePlaceholder"
             />
 
+            <label for="expense-amount-input" class="sr-only" data-i18n="expenseAmountLabel">Expense amount (dollars)</label>
             <input
               type="number"
               id="expense-amount-input"
@@ -73,9 +91,9 @@
               placeholder="$0"
             />
 
-            <div class="add-expense">
-              <img src="icon/plus.png" alt="Add expense" data-i18n-alt="addExpenseAlt" />
-            </div>
+            <button type="button" class="add-expense" data-i18n-aria-label="addExpenseAlt" aria-label="Add expense">
+              <img src="icon/plus.png" alt="" aria-hidden="true" />
+            </button>
           </div>
         </div>
 
@@ -85,6 +103,7 @@
           <div class="form-error" id="income-error" aria-live="polite"></div>
 
           <div class="input">
+            <label for="income-title-input" class="sr-only" data-i18n="incomeTitleLabel">Income title</label>
             <input
               type="text"
               id="income-title-input"
@@ -93,6 +112,7 @@
               data-i18n-placeholder="titlePlaceholder"
             />
 
+            <label for="income-amount-input" class="sr-only" data-i18n="incomeAmountLabel">Income amount (dollars)</label>
             <input
               type="number"
               id="income-amount-input"
@@ -100,9 +120,9 @@
               placeholder="$0"
             />
 
-            <div class="add-income">
-              <img src="icon/plus.png" alt="Add income" data-i18n-alt="addIncomeAlt" />
-            </div>
+            <button type="button" class="add-income" data-i18n-aria-label="addIncomeAlt" aria-label="Add income">
+              <img src="icon/plus.png" alt="" aria-hidden="true" />
+            </button>
           </div>
         </div>
 
@@ -112,9 +132,9 @@
       </div>
     </div>
 
-    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite">
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-labelledby="cookie-banner-title" aria-live="polite">
       <div class="cookie-content">
-        <strong data-i18n="cookieTitle">Cookie Notice</strong>
+        <strong id="cookie-banner-title" data-i18n="cookieTitle">Cookie Notice</strong>
         <p data-i18n="cookieText">
           We use essential cookies and local storage to remember your preferences and improve the app experience.
         </p>

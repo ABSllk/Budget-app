@@ -5,6 +5,8 @@ const chartEl = document.querySelector(".chart");
 const canvas = document.createElement("canvas");
 canvas.width = 50;
 canvas.height = 50;
+canvas.setAttribute("role", "img");
+canvas.setAttribute("aria-label", "Income vs expense donut chart");
 
 chartEl.appendChild(canvas);
 
