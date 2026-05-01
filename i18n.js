@@ -10,6 +10,11 @@ const translations = {
     titlePlaceholder: "title",
     addExpenseAlt: "Add expense",
     addIncomeAlt: "Add income",
+    expenseTitleLabel: "Expense title",
+    expenseAmountLabel: "Expense amount (dollars)",
+    incomeTitleLabel: "Income title",
+    incomeAmountLabel: "Income amount (dollars)",
+    chartAriaLabel: "Income vs expense donut chart",
 
     cookieTitle: "Cookie Notice",
     cookieText:
@@ -37,7 +42,10 @@ const translations = {
     noSellingTitle: "Data Sharing",
     noSellingText:
       "This student project does not sell, rent, or share personal data with third parties.",
-    backHome: "Back to Budget App"
+    backHome: "Back to Budget App",
+
+    landscapeMode: "Landscape",
+    landscapeToggleAlt: "Toggle landscape mode"
   },
 
   zh: {
@@ -51,6 +59,11 @@ const translations = {
     titlePlaceholder: "标题",
     addExpenseAlt: "添加支出",
     addIncomeAlt: "添加收入",
+    expenseTitleLabel: "支出标题",
+    expenseAmountLabel: "支出金额（元）",
+    incomeTitleLabel: "收入标题",
+    incomeAmountLabel: "收入金额（元）",
+    chartAriaLabel: "收入与支出环形图",
 
     cookieTitle: "Cookie 提示",
     cookieText:
@@ -78,7 +91,10 @@ const translations = {
     noSellingTitle: "数据共享",
     noSellingText:
       "本学生项目不会出售、出租或与第三方共享个人数据。",
-    backHome: "返回 Budget App"
+    backHome: "返回 Budget App",
+
+    landscapeMode: "横屏",
+    landscapeToggleAlt: "切换横屏模式"
   }
 };
 
@@ -105,6 +121,11 @@ function setLanguage(language) {
   document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
     const key = element.getAttribute("data-i18n-alt");
     element.alt = translations[selectedLanguage][key] || key;
+  });
+
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    const key = element.getAttribute("data-i18n-aria-label");
+    element.setAttribute("aria-label", translations[selectedLanguage][key] || key);
   });
 
   updateActiveLanguageButton(selectedLanguage);
@@ -170,8 +191,44 @@ window.tBudgetApp = function (key) {
 
 window.setBudgetAppLanguage = setLanguage;
 
+function detectDefaultOrientation() {
+  return window.innerWidth >= 600 ? "landscape" : "portrait";
+}
+
+function applyOrientation(isLandscape, toggleBtn) {
+  document.body.classList.toggle("landscape-mode", isLandscape);
+  if (toggleBtn) {
+    toggleBtn.setAttribute("aria-pressed", isLandscape ? "true" : "false");
+  }
+}
+
+function setupOrientationToggle() {
+  const toggle = document.getElementById("responsive-toggle");
+  if (!toggle) return;
+
+  let userOverride = localStorage.getItem("budget_app_orientation") !== null;
+  const saved = localStorage.getItem("budget_app_orientation");
+  const initial = saved !== null ? saved : detectDefaultOrientation();
+  applyOrientation(initial === "landscape", toggle);
+
+  toggle.addEventListener("click", () => {
+    userOverride = true;
+    const isLandscape = toggle.getAttribute("aria-pressed") === "true";
+    const next = !isLandscape;
+    localStorage.setItem("budget_app_orientation", next ? "landscape" : "portrait");
+    applyOrientation(next, toggle);
+  });
+
+  window.addEventListener("resize", () => {
+    if (!userOverride) {
+      applyOrientation(detectDefaultOrientation() === "landscape", toggle);
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupLanguageButtons();
   setLanguage(getCurrentLanguage());
   setupCookieBanner();
+  setupOrientationToggle();
 });
