@@ -246,11 +246,15 @@ function showEntry(list, type, title, amount, id) {
   entryDiv.className = "entry";
   entryDiv.textContent = `${title} : $${amount}`;
 
-  const editDiv = document.createElement("div");
+  const editDiv = document.createElement("button");
+  editDiv.type = "button";
   editDiv.id = "edit";
+  editDiv.setAttribute("aria-label", `Edit ${title}`);
 
-  const deleteDiv = document.createElement("div");
+  const deleteDiv = document.createElement("button");
+  deleteDiv.type = "button";
   deleteDiv.id = "delete";
+  deleteDiv.setAttribute("aria-label", `Delete ${title}`);
 
   li.append(entryDiv, editDiv, deleteDiv);
   list.prepend(li);
@@ -280,10 +284,12 @@ function hide(elements) {
 
 function active(element) {
   element.classList.add("focus");
+  element.setAttribute("aria-selected", "true");
 }
 
 function inactive(elements) {
   elements.forEach((element) => {
     element.classList.remove("focus");
+    element.setAttribute("aria-selected", "false");
   });
 }
