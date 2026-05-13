@@ -3,6 +3,7 @@
   src: url("font/Gilroy-Regular.woff") format("woff");
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -10,6 +11,7 @@
   src: url("font/Gilroy-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 
 body {
@@ -80,6 +82,7 @@ input[type="number"] {
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 14px;
   padding: 6px 10px;
+  min-height: 44px;
   background-color: transparent;
   color: #ffffff;
   cursor: pointer;
@@ -157,7 +160,8 @@ input[type="number"] {
 
 /************** DASHBOARD ***********/
 .budget-dashboard {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 470px;
   background-color: #fff;
@@ -192,7 +196,9 @@ input[type="number"] {
   opacity: 0.4;
   background: none;
   border: none;
-  padding: 0;
+  padding: 14px 4px;
+  min-height: 48px;
+  vertical-align: middle;
 }
 
 .toggle .second-tab,
@@ -226,6 +232,7 @@ input[type="number"] {
 
 /* ALL */
 .budget-dashboard #all {
+  flex: 1;
   width: 100%;
   height: auto;
   position: relative;
@@ -267,9 +274,9 @@ input[type="number"] {
 
 .budget-dashboard #all ul.list li #delete {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 20px;
+  width: 44px;
+  height: 44px;
+  right: 8px;
   cursor: pointer;
   border: none;
   background-color: transparent;
@@ -277,6 +284,9 @@ input[type="number"] {
   background-image: url("icon/trash.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
+  background-position: center;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .budget-dashboard #all ul.list li.expense {
@@ -285,6 +295,7 @@ input[type="number"] {
 
 /* EXPENSE */
 .budget-dashboard #expense {
+  flex: 1;
   width: 100%;
   min-height: 339px;
   position: relative;
@@ -342,8 +353,8 @@ input[type="number"] {
 }
 
 .budget-dashboard #expense .input .add-expense img {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
 }
 
@@ -380,9 +391,9 @@ input[type="number"] {
 
 .budget-dashboard #expense ul.list li #edit {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 50px;
+  width: 44px;
+  height: 44px;
+  right: 38px;
   cursor: pointer;
   border: none;
   background-color: transparent;
@@ -390,13 +401,16 @@ input[type="number"] {
   background-image: url("icon/edit.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
+  background-position: center;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .budget-dashboard #expense ul.list li #delete {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 20px;
+  width: 44px;
+  height: 44px;
+  right: 8px;
   cursor: pointer;
   border: none;
   background-color: transparent;
@@ -404,10 +418,14 @@ input[type="number"] {
   background-image: url("icon/trash.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
+  background-position: center;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* INCOME */
 .budget-dashboard #income {
+  flex: 1;
   width: 100%;
   min-height: 339px;
   position: relative;
@@ -465,8 +483,8 @@ input[type="number"] {
 }
 
 .budget-dashboard #income .input .add-income img {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
 }
 
@@ -502,9 +520,9 @@ input[type="number"] {
 
 .budget-dashboard #income ul.list li #edit {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 50px;
+  width: 44px;
+  height: 44px;
+  right: 38px;
   cursor: pointer;
   border: none;
   background-color: transparent;
@@ -512,13 +530,16 @@ input[type="number"] {
   background-image: url("icon/edit.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
+  background-position: center;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .budget-dashboard #income ul.list li #delete {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 20px;
+  width: 44px;
+  height: 44px;
+  right: 8px;
   cursor: pointer;
   border: none;
   background-color: transparent;
@@ -526,6 +547,9 @@ input[type="number"] {
   background-image: url("icon/trash.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
+  background-position: center;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* COOKIE BANNER */
@@ -572,6 +596,7 @@ input[type="number"] {
   border: none;
   border-radius: 12px;
   padding: 7px 12px;
+  min-height: 44px;
   cursor: pointer;
   font-family: "Gilroy Bold";
 }
@@ -674,6 +699,7 @@ input[type="number"] {
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 14px;
   padding: 5px 10px;
+  min-height: 44px;
   cursor: pointer;
   color: #ffffff;
   font-size: 0.8em;
