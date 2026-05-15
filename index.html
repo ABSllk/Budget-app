@@ -6,10 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Budget Web App | JavaScript</title>
     <meta name="description" content="A simple budget tracking web app to manage your income and expenses." />
+    <link rel="preload" href="font/Gilroy-Regular.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="font/Gilroy-Bold.woff" as="font" type="font/woff" crossorigin />
     <link href="./style.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
+    <script>
+      (function () {
+        var saved = localStorage.getItem("budget_app_orientation");
+        var isLandscape =
+          saved !== null ? saved === "landscape" : window.innerWidth >= 600;
+        if (isLandscape) document.body.classList.add("landscape-mode");
+      })();
+    </script>
     <div class="budget-container">
       <div class="budget-sidebar">
         <div class="app-title">
